@@ -1,4 +1,4 @@
-#define DEBUG_TYPE "BlkLoopPass" 
+
 
 #include <llvm/Pass.h>
 #include <llvm/IR/Function.h> 
@@ -23,9 +23,9 @@ namespace{
 		static	char ID;
 		BlkLoppPass():FunctionPass(ID){}
 		
-		void getAnalysisUsage(AnalysisUsage &AU) const{
+		void getAnalysisUsage(AnalysisUsage &AU) const override{
 			AU.setPreservesAll();
-			AU.addRequired<LoopInfo>();
+			AU.addRequired<LoopInfoWrapperPass>();
 		}
 		
 		void countBlocksInLoop(Loop *L, unsigned nesting){
@@ -33,7 +33,7 @@ namespace{
 			Loop::block_iterator bb;
 			
 			for(bb = L->block_begin(); bb != L->block_end();++bb)
-				numBlocks++;
+    				numBlocks++;
 			
 			errs() << "Loop level " << nesting << " has " << numBlocks << " blocks\n";
 			vector<Loop*> subLoops = L->getSubLoops();
@@ -44,7 +44,7 @@ namespace{
 		}
 		
 		virtual	bool runOnFunction(Function &F){
-			LoopInfo &LI = getAnalysis<LoopInfo>();
+			LoopInfo &LI = getAnalysis<LoopInfoWrapperPass>().getLoopInfo();
 			errs() << "Function " << F.getName() + "\n";
 			for(LoopInfo::iterator i = LI.begin(), e = LI.end(); i != e; ++i)
 				countBlocksInLoop(*i, 0);
