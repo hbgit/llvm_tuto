@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\FirstExample",
+    "\\FirstExample\\ex1",
+    "\\Parse\\bin_pass",
+    "\\Parse\\bin_pass\\src_llvm",
+    "\\Parse\\bin_pass\\src_llvm\\main"
+  ],
+  "SelectedNode": "\\FirstExample\\ex1\\README.txt",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,6 +1,12 @@
 # llvm_tuto
 This repo has samples with LLVM/Clang.
 
+# It was adopted LLVM 6.0 and the follow packages:
+- git
+- build-essential
+- llvm-6.0-dev
+- clang-6.0
+
 # FirstExample
 - ex1
     - Install LLVM/Clang
