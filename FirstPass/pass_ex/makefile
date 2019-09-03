@@ -1,5 +1,5 @@
-CXX := clang++ `llvm-config --cxxflags`
-CC := clang
+CXX := clang++-6.0 `llvm-config-6.0 --cxxflags`
+CC := clang-6.0
 
 all:
 	$(CXX) opCounter.cpp -c -o opCounter.cpp.o

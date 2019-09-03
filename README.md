@@ -6,6 +6,8 @@ This repo has samples with LLVM/Clang.
 - build-essential
 - llvm-6.0-dev
 - clang-6.0
+- graphviz
+- nano
 
 # FirstExample
 - ex1
