@@ -1,17 +1,17 @@
 ############################################################
 # Dockerfile to build LLVM environment to build llvm pass
-# based on Ubuntu 18.04
+# based on dev-llvm_6.0
 # Usage:
-# 
+#
 #   $ docker build -t hrocha/llvm6tuto --no-cache -f Dockerfile .
-#   $ docker run -it --name=llvm6tuto -v $(pwd):/home/tryllvm/dev/clone:Z --user $(id -u):$(id -g) hrocha/llvm6tuto /bin/bash
+#   $ docker run -it --name=llvm6run -v $(pwd):/home/tryllvm/dev/clone:Z --user $(id -u):$(id -g) hrocha/llvm6tuto /bin/bash
 #
 # The docker user is "tryllvm" and the password is "tryllvm"
 # Docker tips:
 #  You can check that the container still exists by running: $ docker ps -a
 #  You can restart the container by running: docker start -ai llvm6tuto
 ############################################################
-FROM ubuntu:18.04
+FROM hrocha/dev-llvm_6.0:first
 
 # Metadata indicating an image maintainer.
 MAINTAINER <herberthb12@gmail.com>
@@ -20,15 +20,11 @@ MAINTAINER <herberthb12@gmail.com>
 RUN apt-get update
 
 # Devel packages
-RUN apt-get install -y sudo \	
-    build-essential \    
+RUN apt-get install -y sudo \
     python-minimal \
-    cmake \
-    llvm-6.0-dev \
-    clang-6.0 \
     nano \
-    graphviz 
-    
+    graphviz
+
 # Clean packages installation
 RUN apt-get clean
 
@@ -36,6 +32,10 @@ RUN useradd -m tryllvm && \
     echo tryllvm:tryllvm | chpasswd && \
     cp /etc/sudoers /etc/sudoers.bak && \
     echo 'tryllvm ALL=(root) NOPASSWD: ALL' >> /etc/sudoers
+
+
+# Adding LLVM tools on path
+RUN echo "export PATH=\$PATH:/llvm/release/llvm600/bin/" >> /etc/bash.bashrc
 
 USER tryllvm
 RUN mkdir /home/tryllvm/dev
