@@ -37,7 +37,15 @@ namespace {
         if (F.getName() == "main") {
 
           LLVMContext &Ctx = F.getContext();
-          Constant* map2check_exit = F.getParent()->getOrInsertFunction("map2check_success", Type::getVoidTy(Ctx));
+          Constant* map2check_exit = F.getParent()->getOrInsertFunction("map2check_success", Type::getInt32Ty(Ctx));
+          Function *hook = cast<Function>(map2check_exit);
+
+          //Constant* map2check_exit = F.getParent()->getOrInsertFunction("map2check_success", Type::getVoidTy(Ctx));
+          // for void just is necessary 
+          // builder.SetInsertPoint(&bb, ++builder.GetInsertPoint());
+          // builder.CreateCall(map2check_exit);
+
+
           /*
           std::vector<Type*> paramTypes = {Type::getInt32Ty(Ctx)};
           Type *retType = Type::getVoidTy(Ctx);
@@ -50,9 +58,20 @@ namespace {
             for (auto &instruction : bb) {
              if ( auto *op = dyn_cast<BinaryOperator>(&instruction) ) { 
                 
+            
+                Instruction *newInst = CallInst::Create(hook, "call_tmp");
+                IRBuilder<> builder(reinterpret_cast<Instruction*>(&instruction));  
+                bb.getInstList().insert(builder.GetInsertPoint()++, newInst);
+                
+                
                 // Insert Before the instruction
-                IRBuilder<> builder(reinterpret_cast<Instruction*>(&instruction));
-                builder.CreateCall(map2check_exit);
+                //IRBuilder<> builder(reinterpret_cast<Instruction*>(&instruction));
+                //instruction.getParent()->getOrInsertFunction("map2check_success", Type::getVoidTy(Ctx));
+                //CallInst ca = new CallInst();
+                
+                /*
+                AllocaInst* pa = new AllocaInst(Type::getInt32Ty(Ctx), 0, "temp1", op);                
+                bb.getInstList().insert(builder.GetInsertPoint(), map2check_exit); 
 
                 // Insert After the instruction
                 builder.SetInsertPoint(&bb, ++builder.GetInsertPoint());
@@ -61,10 +80,10 @@ namespace {
                 // Create a store instruction to call the function
                 // i -> current instruction pointer which represents %add ( source of store instruction ), 
                 // pa -> destination. i.e., temp1
-                AllocaInst* pa = new AllocaInst(Type::getInt32Ty(Ctx), 0, "temp1", op);                
+                AllocaInst* pa = new AllocaInst(Type::getInt32Ty(Ctx), 0, "temp2", op);                
                 StoreInst *str = new StoreInst(op, pa); 
                 // ib -> instruction address before which you want to insert this store instruction
-                bb.getInstList().insert(builder.GetInsertPoint()++, str); 
+                bb.getInstList().insert(builder.GetInsertPoint()++, str); */
 
                 return true;
 
