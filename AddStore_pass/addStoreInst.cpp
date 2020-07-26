@@ -1,6 +1,5 @@
 #define DEBUG_TYPE "opAddStoreInstPass"
 
-#include <llvm/Pass.h>
 #include <llvm/IR/Function.h> 
 #include <llvm/IR/InstIterator.h>
 #include <llvm/IR/Instructions.h>
@@ -12,6 +11,7 @@
 #include <string.h> 
 
 using namespace llvm;
+
 namespace {
   
   struct ListFunctPass : public FunctionPass {
@@ -23,6 +23,7 @@ namespace {
         
         // Look for main function
         if (F.getName() == "main") {  
+          
 
           // Getting LLVM context from function
           LLVMContext &Ctx = F.getContext();   
@@ -37,7 +38,9 @@ namespace {
               // Look for BinaryOperator instruction
               if ( auto *op = dyn_cast<BinaryOperator>(pointer) ) {   
 
-                Instruction* pointer_2 = reinterpret_cast<Instruction*>(&*++i);           
+                Instruction* pointer_2 = reinterpret_cast<Instruction*>(&*++i);  
+
+                     
                                
                 // Creating alloca instruction:                
                 // AllocaInst(Type *Ty, unsigned AddrSpace, Value *ArraySize, unsigned Align,
@@ -49,6 +52,7 @@ namespace {
                 //IRBuilder<> builder(reinterpret_cast<Instruction*>(pa)); 
 
                 Instruction* pointer_3 = reinterpret_cast<Instruction*>(&*++i);  
+                
 
                 StoreInst *str = new StoreInst(op, pa, pointer_3);   
                 

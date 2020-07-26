@@ -13,13 +13,14 @@
 
 using namespace llvm;
 namespace {
-  
+    
   struct ListFunctPass : public FunctionPass {
    
     static char ID;   
     ListFunctPass() : FunctionPass(ID) {}
     
     virtual bool runOnFunction(Function &F) {
+        
         //errs() << "Function " << F.getName() << '\n';
         // Get the function to call from our runtime library.
         /**
@@ -62,6 +63,10 @@ namespace {
                 Instruction *newInst = CallInst::Create(hook, "call_tmp");
                 IRBuilder<> builder(reinterpret_cast<Instruction*>(&instruction));  
                 bb.getInstList().insert(builder.GetInsertPoint()++, newInst);
+
+
+
+                
                 
                 
                 // Insert Before the instruction
