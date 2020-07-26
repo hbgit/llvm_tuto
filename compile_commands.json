@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/hrocha/Documents/Projects/llvm_tuto/build/AddAlloca_pass",
+  "command": "/usr/bin/c++  -DAddAlloca_pass_EXPORTS -I/usr/lib/llvm-8/include -I/home/hrocha/Documents/Projects/llvm_tuto  -fPIC   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -fno-rtti -std=gnu++11 -o CMakeFiles/AddAlloca_pass.dir/addAlloca.cpp.o -c /home/hrocha/Documents/Projects/llvm_tuto/AddAlloca_pass/addAlloca.cpp",
+  "file": "/home/hrocha/Documents/Projects/llvm_tuto/AddAlloca_pass/addAlloca.cpp"
+}
+]

@@ -32,7 +32,7 @@ namespace {
             // Running for each instruction
             for (auto &instruction : bb) {
               // Look for BinaryOperator instruction
-              if ( auto *op = dyn_cast<BinaryOperator>(&instruction) ) {              
+              if ( auto *op = dyn_cast<BinaryOperator>(&instruction) ) {                             
 
                 // Creating alloca instruction:                
                 // AllocaInst(Type *Ty, unsigned AddrSpace, Value *ArraySize, unsigned Align,
