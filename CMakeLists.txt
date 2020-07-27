@@ -43,7 +43,14 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 add_subdirectory(AddAlloca_pass)  # Use your pass name here.
 install(
-        FILES ${PROJECT_BINARY_DIR}/AddAlloca_pass/libAddAlloca_pass.so
-        DESTINATION lib
-    )  
+    FILES ${PROJECT_BINARY_DIR}/AddAlloca_pass/libAddAlloca_pass.so
+    DESTINATION lib
+)  
+
+add_subdirectory(AddStore_pass)  # Use your pass name here.
+install(
+    FILES ${PROJECT_BINARY_DIR}/AddStore_pass/libAddStore_pass.so
+    DESTINATION lib
+)
+
 add_subdirectory(test)

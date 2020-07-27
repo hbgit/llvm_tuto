@@ -1,6 +1,10 @@
-# Update Variable PASS
+# Store Instruction PASS
 
-- RUN: $ make
+From release folder in the root project.
+
+- RUN: 
+
+$ opt-8 -load ./lib/libAddStore_pass.so -opAddStoreInstPass test/simple_attr.bc > simple_attr_new.bc
 
 This LLVM pass example aims to add an StoreInst in the code. In C code:
 
@@ -29,7 +33,13 @@ int main(){
 }
 
 
-- OUTPUT: $ sdiff example_code_test.ll example_code_test_new.ll 
+- OUTPUT: 
+
+$ llvm-dis-8 test/simple_attr.bc -o test/simple_attr.ll 
+
+$ llvm-dis-8 simple_attr_new.bc
+
+$ sdiff test/simple_attr.ll simple_attr_new.ll 
 
 ...
 %4 = load i32, i32* %3, align 4, !dbg !15			  %4 = load i32, i32* %3, align 4, !dbg !15

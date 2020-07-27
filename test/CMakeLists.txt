@@ -5,6 +5,7 @@ set(CMAKE_C_LLVM_DIS llvm-dis-8)
 list(APPEND TEST_C "")
 
 list(APPEND TEST_C "example_code_test")
+list(APPEND TEST_C "simple_attr")
 
 
 foreach(F ${TEST_C})
@@ -21,17 +22,3 @@ foreach(F ${TEST_C})
         DESTINATION test
     )      
 endforeach()
-
-# add_custom_target(${F}.bc ALL DEPENDS ${F}.ll)
-# foreach(F ${TEST_C})
-#     add_custom_command(
-#         OUTPUT "${F}.ll"        
-#         COMMAND ${CMAKE_C_LLVM_DIS} ${CMAKE_CURRENT_LIST_DIR}/${F}.bc  
-#         DEPENDS ${CMAKE_CURRENT_LIST_DIR}/${F}.bc
-#         COMMENT "Generating ${CMAKE_CURRENT_LIST_DIR}/${F}.ll to bytecode human-readable LLVM assembly language"
-#     )      
-#     install(
-#         FILES ${PROJECT_BINARY_DIR}/test/${F}.ll
-#         DESTINATION test
-#     )
-# endforeach()
