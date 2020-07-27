@@ -26,8 +26,8 @@ int main(){
   int a;
 
   a = a + b;
-  int tmp_1;
-  tmp_1 = a;
+  int tmp_1; << NEW
+  tmp_1 = a; << NEW
 
   return 0;
 }

@@ -30,6 +30,7 @@ namespace {
           
           // Running for each Basic Block
           for (auto &bb : F) {
+            
             // Running for each instruction
             for (BasicBlock::iterator i = bb.begin(), ie = bb.end(); i != ie; ++i) {
 
@@ -37,26 +38,17 @@ namespace {
 
               // Look for BinaryOperator instruction
               if ( auto *op = dyn_cast<BinaryOperator>(pointer) ) {   
-
-                Instruction* pointer_2 = reinterpret_cast<Instruction*>(&*++i);  
-
-                     
+                
+                // API to create and insert instructions
+                IRBuilder<> builder(reinterpret_cast<Instruction*>(op)); 
                                
-                // Creating alloca instruction:                
-                // AllocaInst(Type *Ty, unsigned AddrSpace, Value *ArraySize, unsigned Align,
-                //            const Twine &Name = "", Instruction *InsertBefore = nullptr);
-                AllocaInst* pa = new AllocaInst(Type::getInt32Ty(Ctx), 0, NULL, 4, "tmp_1", pointer_2);
-                //AllocaInst::Create(Type::getInt32Ty(Ctx), 0, NULL, 4, "tmp_1")->insertAfter(op);
-                //bb.getInstList().insert(builder.GetInsertPoint()++, pa); 
-                //bb.getInstList().insert(builder.GetInsertPoint(), str);                          
-                //IRBuilder<> builder(reinterpret_cast<Instruction*>(pa)); 
+                // Creating alloca instruction:                                
+                builder.SetInsertPoint(&bb, ++builder.GetInsertPoint());
+                auto *pa = builder.CreateAlloca(Type::getInt32Ty(Ctx),NULL,"tmp_1");
 
-                Instruction* pointer_3 = reinterpret_cast<Instruction*>(&*++i);  
-                
-
-                StoreInst *str = new StoreInst(op, pa, pointer_3);   
-                
-                //bb.getInstList().insert(builder.GetInsertPoint(), str);                          
+                // Creating store instruction:
+                builder.SetInsertPoint(&bb, builder.GetInsertPoint());
+                builder.CreateStore(op, pa);                                     
 
                 return true;
 
