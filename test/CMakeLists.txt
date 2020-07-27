@@ -6,6 +6,7 @@ list(APPEND TEST_C "")
 
 list(APPEND TEST_C "example_code_test")
 list(APPEND TEST_C "simple_attr")
+list(APPEND TEST_C "var_not_init")
 
 
 foreach(F ${TEST_C})

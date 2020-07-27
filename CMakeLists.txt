@@ -53,4 +53,11 @@ install(
     DESTINATION lib
 )
 
+add_subdirectory(AddFunction_pass)  # Use your pass name here.
+install(
+    FILES ${PROJECT_BINARY_DIR}/AddFunction_pass/libAddCallInst_pass.so
+    DESTINATION lib
+)
+
+
 add_subdirectory(test)
