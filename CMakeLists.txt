@@ -59,5 +59,11 @@ install(
     DESTINATION lib
 )
 
+add_subdirectory(AddInitFunction_pass)  # Use your pass name here.
+install(
+    FILES ${PROJECT_BINARY_DIR}/AddInitFunction_pass/libAddInitFunction_pass.so
+    DESTINATION lib
+)
+
 
 add_subdirectory(test)
