@@ -49,56 +49,36 @@ struct ListFunctPass : public FunctionPass {
             errs() << "Instruction: " << *al << " is used " << al->getNumUses()
                    << " times \n";
 
-            
-            
-            // errs() << *al->uses()-> << "\n";
-            // errs() << *al->users().begin().getUse().get() << "\n";
+            // This because of backtracking def-use chain searching
+            // https://stackoverflow.com/questions/35370195/llvm-difference-between-uses-and-user-in-instruction-or-value-classes
+            if (al->getNumUses() > 0){
 
-            /*for (auto U : al->users() ) { // U is of type User*
-              if (auto I = dyn_cast<Instruction>(U)) {
-                // an instruction uses al
-                errs() << *I << "\n";
+                al->reverseUseList();
+
+                // We need the first use from instruction
+                // to check if is an store instruction
+                if( auto *inst = dyn_cast<LoadInst>(al->uses().begin()->getUser()) ){
+                      errs() << *al->uses().begin()->getUser() << "\n";
+                      errs() << "Is not a store instruction"
+                            << "\n";
+
+                      // Now we create a callinst instruction
+                      // to be inserted before this instruction
+                      errs() << *inst << "\n";
+                      IRBuilder<> builder(reinterpret_cast<Instruction *>(inst));
+                      builder.SetInsertPoint(&bb, builder.GetInsertPoint());
+
+                      // Create Call Inst to void __TRACK(void);
+                      auto *cInst =
+                          builder.CreateCall(hook, None, "tmp_1_my_call", NULL);
+
+                      // Create a store instruction
+                      builder.SetInsertPoint(&bb, builder.GetInsertPoint());
+                      builder.CreateStore(cInst, al);
+
+
+                }
               }
-            }*/
-
-            al->reverseUseList();
-            errs() << *al->uses().begin()->getUser() << "\n";
-            
-            //errs() << *al->uses().end()->getUser(). << "\n";
-            
-
-            
-            /*errs() << "1 :::: ======================================== \n";
-            // def-use chain:
-            //
-            https://stackoverflow.com/questions/35370195/llvm-difference-between-uses-and-user-in-instruction-or-value-classes
-            for (Value::use_iterator i = al->use_begin(), e = al->use_end();
-                 i != e; ++i) {
-
-              // if(Instruction *inst = dyn_cast<Instruction>(i->get())){
-              errs() << &*i << "\n";
-              //}
-
-              // errs() << ">> " << *i->getUser() << "\n";
-            }*/
-
-            // However we need the first use from instruction
-            // to check if is an store instruction
-            // errs() << "   >> First match only: " <<
-            //       *al->user_back() << "\n";
-            // if(al->use_begin()->getUser()){
-
-            //}
-
-            // errs() << *ld->getPointerOperand() << "\n";
-
-            // IRBuilder<> builder(reinterpret_cast<Instruction*>(ld));
-            // To insert after this instruction
-            // builder.SetInsertPoint(&bb, builder.GetInsertPoint());
-            // Create Call Inst to void __TRACK(void);
-            // builder.CreateCall(hook, None, "", NULL);
-
-            // Create a store instruction
 
             // return true;
           }
