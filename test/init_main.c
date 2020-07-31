@@ -3,6 +3,8 @@ int main(){
 
     int e;
 
+    double f;
+
     int d = k;
 
     

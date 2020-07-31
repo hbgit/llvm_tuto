@@ -34,9 +34,9 @@ struct ListFunctPass : public FunctionPass {
       LLVMContext &Ctx = F.getContext();
 
       // int __MY_INT(void);
-      Constant *funct =
-          F.getParent()->getOrInsertFunction("__MY_INT", Type::getInt32Ty(Ctx));
-      Function *hook = cast<Function>(funct);
+      Constant *funct;
+      //= F.getParent()->getOrInsertFunction("__MY_INT", Type::getInt32Ty(Ctx));
+      
 
       // Running each basic block
       for (auto &bb : F) {
@@ -48,6 +48,7 @@ struct ListFunctPass : public FunctionPass {
 
             errs() << "Instruction: " << *al << " is used " << al->getNumUses()
                    << " times \n";
+            //errs() << al->getAllocatedType()->isIntegerTy() << "\n";
 
             // This because of backtracking def-use chain searching
             // https://stackoverflow.com/questions/35370195/llvm-difference-between-uses-and-user-in-instruction-or-value-classes
@@ -68,14 +69,19 @@ struct ListFunctPass : public FunctionPass {
                       IRBuilder<> builder(reinterpret_cast<Instruction *>(inst));
                       builder.SetInsertPoint(&bb, builder.GetInsertPoint());
 
-                      // Create Call Inst to void __TRACK(void);
-                      auto *cInst =
-                          builder.CreateCall(hook, None, "tmp_1_my_call", NULL);
+                      // Identify the variable type                     
+                      if(al->getAllocatedType()->isIntegerTy()){
+                          errs() << "Is Interger \n";
+                          funct = F.getParent()->getOrInsertFunction("__MY_INT", Type::getInt32Ty(Ctx));
+                          Function *hook = cast<Function>(funct);
+                          // Create Call Inst to void __TRACK(void);
+                          auto *cInst =
+                              builder.CreateCall(hook, None, "tmp_1_my_call", NULL);
 
-                      // Create a store instruction
-                      builder.SetInsertPoint(&bb, builder.GetInsertPoint());
-                      builder.CreateStore(cInst, al);
-
+                          // Create a store instruction
+                          builder.SetInsertPoint(&bb, builder.GetInsertPoint());
+                          builder.CreateStore(cInst, al);
+                      }
 
                 }
               }
