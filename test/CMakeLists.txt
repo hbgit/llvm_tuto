@@ -8,7 +8,7 @@ list(APPEND TEST_C "example_code_test")
 list(APPEND TEST_C "simple_attr")
 list(APPEND TEST_C "var_not_init")
 list(APPEND TEST_C "init_main")
-
+list(APPEND TEST_C "preprocessed.c.cseq")
 
 foreach(F ${TEST_C})
     add_custom_command(

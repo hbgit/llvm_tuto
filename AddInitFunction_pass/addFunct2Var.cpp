@@ -4,6 +4,7 @@
 #include <llvm-8/llvm/IR/Use.h>
 #include <llvm-8/llvm/IR/Value.h>
 #include <llvm-8/llvm/Support/Casting.h>
+#include <string>
 
 #define DEBUG_TYPE "opAddFunctPass"
 
@@ -35,6 +36,7 @@ struct ListFunctPass : public FunctionPass {
 
       // int __MY_INT(void);
       Constant *funct;
+      int id_tmp = 0;
       //= F.getParent()->getOrInsertFunction("__MY_INT", Type::getInt32Ty(Ctx));
       
 
@@ -48,6 +50,7 @@ struct ListFunctPass : public FunctionPass {
 
             errs() << "Instruction: " << *al << " is used " << al->getNumUses()
                    << " times \n";
+            errs() << "---------------------------- \n";
             //errs() << al->getAllocatedType()->isIntegerTy() << "\n";
 
             // This because of backtracking def-use chain searching
@@ -59,27 +62,32 @@ struct ListFunctPass : public FunctionPass {
                 // We need the first use from instruction
                 // to check if is an store instruction
                 if( auto *inst = dyn_cast<LoadInst>(al->uses().begin()->getUser()) ){
-                      errs() << *al->uses().begin()->getUser() << "\n";
+                      //errs() << *al->uses().begin()->getUser() << "\n";
                       errs() << "Is not a store instruction"
                             << "\n";
 
                       // Now we create a callinst instruction
                       // to be inserted before this instruction
-                      errs() << *inst << "\n";
+                      errs() << "::: " << *inst << "\n";
+                      errs() << "BB: " << *inst->getParent() << "\n";
+                      BasicBlock *actual_bb = inst->getParent();
                       IRBuilder<> builder(reinterpret_cast<Instruction *>(inst));
-                      builder.SetInsertPoint(&bb, builder.GetInsertPoint());
+                      builder.SetInsertPoint(actual_bb, builder.GetInsertPoint());
 
                       // Identify the variable type                     
                       if(al->getAllocatedType()->isIntegerTy()){
                           errs() << "Is Interger \n";
                           funct = F.getParent()->getOrInsertFunction("__MY_INT", Type::getInt32Ty(Ctx));
                           Function *hook = cast<Function>(funct);
+                          
+                          errs() << builder.GetInsertPoint()->getDebugLoc().getLine() << "\n";
+                          std::string name_tmp_var = "tmp_call_" + std::to_string(id_tmp);
                           // Create Call Inst to void __TRACK(void);
                           auto *cInst =
-                              builder.CreateCall(hook, None, "tmp_1_my_call", NULL);
+                              builder.CreateCall(hook, None, name_tmp_var.c_str(), NULL);
 
                           // Create a store instruction
-                          builder.SetInsertPoint(&bb, builder.GetInsertPoint());
+                          builder.SetInsertPoint(actual_bb, builder.GetInsertPoint());
                           builder.CreateStore(cInst, al);
                       }
 
